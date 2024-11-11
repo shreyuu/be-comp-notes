@@ -1,16 +1,20 @@
 from tkinter import *
 from captcha.image import ImageCaptcha
 from tkinter import messagebox
+import os
 
 def addNumbers():
     a = u.get()
     b = p.get()
     ca = c.get()
 
+    # Generate the captcha image
     image_info = ImageCaptcha(width=250, height=100)
     captcha_text = 'snjb'
-    source = image_info.generate(captcha_text)
-    image_info.write(captcha_text, 'abc.png')
+    image_file = 'abc.png'
+    
+    # Ensure the captcha image is written before using it
+    image_info.write(captcha_text, image_file)
 
     if a == 'test' and b == '1234':
         if ca == captcha_text:
@@ -20,12 +24,14 @@ def addNumbers():
     else:
         messagebox.showinfo("showinfo", "Login Failed")
 
+    # Now we load the image into the Tkinter canvas
+    img = PhotoImage(file=image_file)
+    canvas.create_image(20, 20, anchor=NW, image=img)
+    canvas.img = img  # Keep a reference to avoid garbage collection
+
 root = Tk()
 canvas = Canvas(root, width=300, height=300)
 canvas.pack()
-
-img = PhotoImage(file="abc.png")
-canvas.create_image(20, 20, anchor=NW, image=img)
 
 l1 = Label(root, text="Username")
 l1.config(font=("Courier", 14))
